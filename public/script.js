@@ -3,11 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlInput = document.getElementById('url-input');
     const statusDiv = document.getElementById('status');
     const jsonOutput = document.getElementById('json-output');
-    const filterSelect = document.getElementById('filter-select');
-
     readBtn.addEventListener('click', async () => {
         const url = urlInput.value.trim();
-        const filter = filterSelect.value;
 
         if (!url) {
             statusDiv.textContent = 'Please enter a URL.';
@@ -23,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ url, filter })
+                body: JSON.stringify({ url })
             });
 
             if (!response.ok) {

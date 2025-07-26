@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.post('/process-url', async (req, res) => {
-    const { url, filter } = req.body;
+    const { url } = req.body;
 
     if (!url) {
         return res.status(400).send({ error: 'URL is required' });
@@ -32,25 +32,17 @@ app.post('/process-url', async (req, res) => {
 
         // Filter Content
         let content = '';
-        if (filter === 'raw') {
-            content = response.data;
-        } else if (filter === 'text') {
-            const mainEl = $('main').first();
-            const articleEl = $('article').first();
-            if (mainEl.length) {
-                content = mainEl.text();
-            } else if (articleEl.length) {
-                content = articleEl.text();
-            } else {
-                $('script, style, header, footer, nav, aside, details, summary, svg, [role="banner"], [role="navigation"], [role="contentinfo"]').remove();
-                content = $('body').text();
-            }
-            content = content.replace(/\s\s+/g, ' ').trim();
-        } else if (filter === 'code') {
-            $('pre, code').each((i, elem) => {
-                content += $(elem).text() + '\n\n';
-            });
+        const mainEl = $('main').first();
+        const articleEl = $('article').first();
+        if (mainEl.length) {
+            content = mainEl.text();
+        } else if (articleEl.length) {
+            content = articleEl.text();
+        } else {
+            $('script, style, header, footer, nav, aside, details, summary, svg, [role="banner"], [role="navigation"], [role="contentinfo"]').remove();
+            content = $('body').text();
         }
+        content = content.replace(/\s\s+/g, ' ').trim();
 
         res.send({ content, links });
 
